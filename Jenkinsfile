@@ -1,34 +1,31 @@
+/* groovylint-disable-next-line CompileStatic */
 pipeline {
     agent any
     tools {
         terraform 'terraform'
     }
     stages {
-        stage('Terraform Apply') {
-            when {
-                expression {
-                    return params.action == 'apply'
-                }
-            }
+        stage('Git init') {
             steps {
-                git 'https://github.com/Dalerjon21/Jenkins-cicd'
-
-                sh 'terraform init -no-color'
-
-                echo "terraform action from paratmetr is --> ${action}"
-
-                sh "${action}"
+                git credentialsId: 'terraform-cicd-token', url: 'https://github.com/Dalerjon21/Jenkins-cicd.git'
             }
         }
-        stage('Terraform Destroy') {
-            when {
-                expression {
-                    return params.action == 'destroy'
-                }
+        stage('Terraform init') {
+            steps {
+                sh 'terraform init -no-color'
+            }
+        }
+        stage('Terraform plan') {
+            steps {
+                sh 'terraform plan -no-color'
+            }
+        }
+        stage('Terraform apply') {
+            input {
+                message "Do you want to apply deployment?"
             }
             steps {
-                echo "terraform action from paratmetr is --> ${action}"
-                sh "${action}"
+                sh 'terraform apply --auto-approve -no-color'
             }
         }
     }
