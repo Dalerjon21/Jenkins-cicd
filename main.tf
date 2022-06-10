@@ -14,3 +14,12 @@ resource "aws_subnet" "pub-sub" {
     Name = "Public-Subnet-J"
   }
 }
+
+resource "aws_subnet" "pri-sub" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.10.2.0/24"
+
+  tags = {
+    Name = "Privet-Subnet-J"
+  }
+}
