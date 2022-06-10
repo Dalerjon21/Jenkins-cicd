@@ -23,3 +23,12 @@ resource "aws_subnet" "pri-sub" {
     Name = "Privet-Subnet-J"
   }
 }
+
+
+resource "aws_internet_gateway" "gw" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "Jenkins-IGW"
+  }
+}
